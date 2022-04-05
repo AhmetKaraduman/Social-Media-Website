@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { getAuth } from "firebase/auth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
 	getStorage,
 	ref,
@@ -12,10 +12,12 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
+import { useAuthStatus } from "../hooks/useAuthStatus";
 
 function CreatePost() {
 	// eslint-disable-next-line
 	const param = useParams();
+	const navigate = useNavigate();
 	const auth = getAuth();
 	const [postData, setPostData] = useState({
 		body: "",
@@ -128,7 +130,7 @@ function CreatePost() {
 		const docRef = await addDoc(collection(db, "posts"), copyPostData);
 
 		toggleCreatePost();
-		window.location.reload();
+		navigate("/");
 	};
 
 	return (
