@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import ToolSection from "../components/ToolSection";
 import Post from "../components/Post";
@@ -14,11 +14,9 @@ import {
 	where,
 	orderBy,
 	limit,
-	startAfter,
 } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
 import CreatePost from "../components/CreatePost";
 import EditProfile from "../components/EditProfile";
 import ImageScreen from "../components/ImageScreen";
@@ -26,9 +24,11 @@ import ImageScreen from "../components/ImageScreen";
 function Profile() {
 	const auth = getAuth();
 	// this one is from auth
+	// eslint-disable-next-line
 	const [user, setUser] = useState(null);
 	// this one is from firebase
 	const [userProfile, setUserProfile] = useState(null);
+	// eslint-disable-next-line
 	const { loggedIn, checkingStatus } = useAuthStatus();
 	const [posts, setPosts] = useState(null);
 	const [sourceImage, setSourceImage] = useState("");
@@ -48,6 +48,7 @@ function Profile() {
 		};
 
 		fetchUser();
+		// eslint-disable-next-line
 	}, [loggedIn, param.userId]);
 
 	useEffect(() => {

@@ -9,10 +9,12 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 
 function ProfileAvatar() {
+	// eslint-disable-next-line
 	const { loggedIn, checkingStatus } = useAuthStatus();
 	const [userProfile, setUserProfile] = useState(null);
 	const navigate = useNavigate();
 	const auth = getAuth();
+	// eslint-disable-next-line
 	const [userData, setUserData] = useState({
 		name: auth.currentUser.displayName,
 		userId: auth.currentUser.uid,
@@ -29,6 +31,7 @@ function ProfileAvatar() {
 		};
 
 		fetchUser();
+		// eslint-disable-next-line
 	}, [loggedIn]);
 	return (
 		<div

@@ -4,10 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { useAuthStatus } from "../hooks/useAuthStatus";
-import { toast } from "react-toastify";
 
 function ToolSection() {
 	const auth = getAuth();
+	// eslint-disable-next-line
 	const { loggedIn, checkingStatus } = useAuthStatus();
 	const [profileName, setProfileName] = useState(null);
 	const [user, setUser] = useState(null);

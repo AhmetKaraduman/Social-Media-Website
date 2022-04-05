@@ -28,12 +28,13 @@ function SignIn() {
 		e.preventDefault();
 		try {
 			const auth = getAuth();
-
+			// eslint-disable-next-line
 			const userCredential = await signInWithEmailAndPassword(
 				auth,
 				email,
 				password
 			);
+			// eslint-disable-next-line
 			const user = userCredential.user;
 			toast.success("logged-in");
 			navigate("/");

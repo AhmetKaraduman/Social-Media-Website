@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 
 function CreatePost() {
-	const [url, setUrl] = useState("");
+	// eslint-disable-next-line
 	const param = useParams();
 	const auth = getAuth();
 	const [postData, setPostData] = useState({
@@ -25,7 +25,7 @@ function CreatePost() {
 	});
 
 	const user = auth.currentUser;
-	const { body, images, userId, userName } = postData;
+	const { body, images } = postData;
 	const onMutate = (e) => {
 		// Files
 		if (e.target.files) {
@@ -124,6 +124,7 @@ function CreatePost() {
 
 		delete copyPostData.images;
 
+		// eslint-disable-next-line
 		const docRef = await addDoc(collection(db, "posts"), copyPostData);
 
 		toggleCreatePost();

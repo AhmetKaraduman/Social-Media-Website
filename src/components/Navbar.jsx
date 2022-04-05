@@ -9,6 +9,7 @@ function Navbar() {
 	const [user, setUser] = useState(null);
 	const navigate = useNavigate();
 	const auth = getAuth();
+	// eslint-disable-next-line
 	const { loggedIn, checkingStatus } = useAuthStatus();
 
 	useEffect(() => {
