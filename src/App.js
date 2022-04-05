@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
 	return (
 		<>
-			<Router>
+			<Router basename="/Social-Media-Website">
 				<Navbar />
 				<Routes>
 					<Route path="/" element={<TimeFlow />} />
