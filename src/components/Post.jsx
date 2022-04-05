@@ -20,7 +20,7 @@ import { faAngleRight, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { getAuth } from "firebase/auth";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Post({ post }) {
 	const auth = getAuth();
@@ -35,6 +35,7 @@ function Post({ post }) {
 	});
 
 	const { comment } = newCommentData;
+	const navigate = useNavigate();
 	const param = useParams();
 
 	useEffect(() => {
@@ -109,7 +110,7 @@ function Post({ post }) {
 			console.log(post.id);
 			const docRef = doc(db, "posts", post.id);
 			await deleteDoc(docRef);
-			window.location.reload();
+			navigate("/");
 			toast.success("Post Deleted");
 		} catch (error) {
 			console.log(error);
