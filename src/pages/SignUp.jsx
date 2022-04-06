@@ -59,6 +59,7 @@ function SignUp() {
 			// setting form data
 			const copyFormSignUpData = { ...formSignUpData };
 			delete copyFormSignUpData.password;
+			copyFormSignUpData.userRef = auth.currentUser.uid;
 			copyFormSignUpData.timestamp = serverTimestamp();
 
 			// save data
