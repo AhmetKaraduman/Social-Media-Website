@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import {
 	doc,
+	updateDoc,
+	arrayUnion,
+	arrayRemove,
 	addDoc,
+	getDoc,
 	collection,
 	getDocs,
 	query,
@@ -16,14 +20,20 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+	faAngleRight,
+	faTrash,
+	faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import { getAuth } from "firebase/auth";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import Like from "./Like";
 
-function Post({ post }) {
+function Post({ post, user }) {
 	const auth = getAuth();
+	// const [user, setUser] = useState(null);
 	const [comments, setComments] = useState(null);
 	// eslint-disable-next-line
 	const { loggedIn, checkingStatus } = useAuthStatus();
@@ -33,6 +43,9 @@ function Post({ post }) {
 		userId: "",
 		userName: "",
 	});
+	const [likes, setLikes] = useState([]);
+
+	const likesBox = document.getElementById(post.id);
 
 	const { comment } = newCommentData;
 	const navigate = useNavigate();
@@ -63,13 +76,18 @@ function Post({ post }) {
 
 				setComments(comments.reverse());
 			} catch (error) {
-				console.log(error);
+				toast.error("Something goes wrong");
 			}
 		};
 
 		fetchComments();
 		// eslint-disable-next-line
 	}, [loggedIn, newCommentData]);
+
+	useEffect(() => {
+		const likes = post.data.likes;
+		setLikes(likes);
+	}, []);
 
 	const textAreaChange = (e) => {
 		setNewCommentData((newCommentData) => ({
@@ -100,27 +118,48 @@ function Post({ post }) {
 			);
 			toast.success("Comment Posted");
 		} catch (error) {
-			console.log(error);
 			toast.error("Failed To Send");
 		}
 	};
 
 	const deletePost = async () => {
 		try {
-			console.log(post.id);
 			const docRef = doc(db, "posts", post.id);
 			await deleteDoc(docRef);
 			navigate("/");
 			toast.success("Post Deleted");
 		} catch (error) {
-			console.log(error);
 			toast.error("Failed to delete post, try again please.");
 		}
 	};
 
-	// const editPost = () => {
-	// 	console.log("edit post");
-	// };
+	const likePost = async () => {
+		try {
+			if (!likes.includes(user.uid)) {
+				const docRef = doc(db, "posts", post.id);
+				await updateDoc(docRef, {
+					likes: arrayUnion(user.uid),
+				});
+			} else {
+				const docRef = doc(db, "posts", post.id);
+				await updateDoc(docRef, {
+					likes: arrayRemove(user.uid),
+				});
+			}
+
+			const docSnap = await getDoc(doc(db, "posts", post.id));
+
+			if (docSnap.exists()) {
+				setLikes(docSnap.data().likes);
+			}
+		} catch (error) {
+			toast.error("Something goes wrong");
+		}
+	};
+
+	const showLiked = () => {
+		likesBox.classList.toggle("hide");
+	};
 
 	let date = "";
 	const months = [
@@ -176,7 +215,7 @@ function Post({ post }) {
 					<div
 						className={`cardImage${
 							post.data.image === "" || post.data.image.length === 0
-								? "noImage"
+								? " noImage"
 								: ""
 						}`}
 					>
@@ -200,19 +239,39 @@ function Post({ post }) {
 						{post.data.body}
 						<span className="postTime">{time}</span>
 					</p>
-
 					{loggedIn ? (
 						auth.currentUser.uid === param.userId ? (
 							<div className="buttons">
 								<button className="btn delete" onClick={deletePost}>
 									<FontAwesomeIcon icon={faTrash} />
 								</button>
-								{/* <button className="btn edit">
-									<FontAwesomeIcon icon={faPencil} onClick={editPost} />
-								</button> */}
 							</div>
 						) : null
 					) : null}
+					<div className="like-section">
+						<button
+							className={`btn like  ${
+								loggedIn ? (likes.includes(user.uid) ? "liked" : "") : ""
+							}`}
+							onClick={likePost}
+						>
+							<FontAwesomeIcon icon={faHeart} />
+						</button>
+						<div className="likes-box hide" id={post.id}>
+							{likes.map((like) => (
+								<Like key={like} likeUserId={like} />
+							))}
+						</div>
+						<p className="likes" onClick={showLiked}>
+							{`${
+								likes.length === 0
+									? ""
+									: likes.length === 1
+									? likes.length + " like"
+									: likes.length + " likes"
+							}`}
+						</p>
+					</div>
 				</div>
 				<div className="cardCommentArea">
 					{comments

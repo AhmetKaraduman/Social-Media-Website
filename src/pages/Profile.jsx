@@ -135,7 +135,9 @@ function Profile() {
 					</div>
 					<div className={`posts ${posts?.length === 0 ? "hide" : ""}`}>
 						{posts
-							? posts.map((post) => <Post key={post.id} post={post} />)
+							? posts.map((post) => (
+									<Post key={post.id} post={post} user={user} />
+							  ))
 							: null}
 					</div>
 				</main>
