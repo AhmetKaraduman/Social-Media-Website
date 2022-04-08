@@ -24,6 +24,7 @@ function CreatePost() {
 		images: "",
 		userId: "",
 		userName: "",
+		likes: [],
 	});
 
 	const user = auth.currentUser;
