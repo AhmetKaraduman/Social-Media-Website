@@ -519,19 +519,20 @@ nav .container {
 	right: 0;
 	border-top-left-radius: 10px;
 	overflow: hidden;
+	/* cursor: pointer; */
 }
 
 .post .card .cardImg .buttons .delete {
 	background-color: rgba(0, 0, 0, 0.4);
 	color: white;
 	padding: 10px 10px;
-	cursor: pointer;
 }
 
 .post .card .cardImg .like-section {
 	display: flex;
 	align-items: center;
 	position: relative;
+	display: inline-block;
 }
 
 .post .card .cardImg .like-section .like {
